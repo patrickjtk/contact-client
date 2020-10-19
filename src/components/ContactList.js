@@ -1,77 +1,90 @@
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import {
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Alert,
+} from "reactstrap";
 import { result } from "lodash";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import contact from "../api/contact";
+import ContactDetail from "./ContactDetail";
+import { Spinner } from "reactstrap";
 
 class ContactList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalShow: false,
+      selectedId: "",
+      redirect: false,
+      errorMsg: null,
     };
+    this.toggleModal = this.toggleModal.bind(this);
+    this.removeRecord = this.removeRecord.bind(this);
   }
 
-  removeRecord() {}
+  toggleModal(id) {
+    this.setState({ modalShow: !this.state.modalShow, selectedId: id });
+  }
+
+  removeRecord = async () => {
+    const resp = await contact.deleteContact(this.state.selectedId);
+    if (!resp.ok) {
+      this.setState({
+        modalShow: !this.state.modalShow,
+        errorMsg: resp.data.message,
+      });
+      return;
+    }
+    this.setState({ modalShow: !this.state.modalShow, redirect: true });
+  };
 
   render() {
     const contacts = result(this.props, "state.contacts", {});
-    console.log("contacts", contacts);
-    console.log("props", this.props);
+
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
+    }
     return (
       <>
-        <Modal show={this.modalShow}>
-          <Modal.Header closeButton>
-            <Modal.Title>Modal heading</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                this.setState({ modalShow: false });
-              }}
-            >
-              Close
+        <Modal
+          isOpen={this.state.modalShow}
+          toggle={this.toggleModal}
+          className="modal-dialog"
+        >
+          <ModalHeader toggle={this.toggleModal}>Modal title</ModalHeader>
+          <ModalBody>Are you sure?</ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.removeRecord}>
+              Yes
+            </Button>{" "}
+            <Button color="secondary" onClick={this.toggleModal}>
+              Cancel
             </Button>
-            <Button variant="primary" onClick={() => {}}>
-              Save Changes
-            </Button>
-          </Modal.Footer>
+          </ModalFooter>
         </Modal>
-        <table className="table">
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>age</td>
-              <td></td>
-            </tr>
-          </thead>
-          <tbody>
+        {this.state.errorMsg && (
+          <Alert color="danger">{this.state.errorMsg}</Alert>
+        )}
+        {contacts.length == 0 ? (
+          <Spinner style={{ width: "3rem", height: "3rem" }} color="success" />
+        ) : (
+          <div className="row p-0 m-0">
             {contacts.map((contact) => (
-              <tr key={contact.id}>
-                <td>
-                  {contact.firstName} {contact.lastName}
-                </td>
-                <td>{contact.age}</td>
-                <td>
-                  <Link className="btn" to={"/contactForm/" + contact.id}>
-                    edit
-                  </Link>
-                  <Button
-                    onClick={() => {
-                      this.setState({ modalShow: true });
-                    }}
-                  >
-                    delete
-                  </Button>
-                </td>
-              </tr>
+              <ContactDetail
+                key={contact.id}
+                contactDetail={contact}
+                onpressAction={() => {
+                  this.toggleModal(contact.id);
+                }}
+              />
             ))}
-          </tbody>
-        </table>
+          </div>
+        )}
       </>
     );
   }

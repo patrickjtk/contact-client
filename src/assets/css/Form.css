@@ -15,14 +15,6 @@
   background-color: white;
 }
 
-.panel .list {
-  padding: 20px 120px;
-  margin: 10px 50px;
-  border-radius: 14px;
-  text-align: center;
-  background-color: white;
-}
-
 .panel .title {
   color: black;
   font-size: 36px;
@@ -43,7 +35,7 @@
   background: #bd0000;
   border-radius: 0.4em;
   color: #fff;
-  left: 24%;
+  left: 30%;
   font-size: 12.3px;
   padding: 2px 7px 2px 7px;
 }
@@ -52,7 +44,7 @@
   content: "";
   position: absolute;
   bottom: 0;
-  left: 50%;
+  right: 1%;
   width: 0;
   height: 0;
   border: 10px solid transparent;
@@ -71,4 +63,47 @@
 .purple-bg {
   background-color: #b007ff;
   color: #fff;
+}
+
+.panel .list {
+  padding: 20px 120px;
+  margin: 10px 50px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.panel-contact {
+  background-color: #fff;
+  border: #979797;
+  border-radius: 5px;
+  height: 17vh;
+}
+
+.thumb-img {
+  height: "30%";
+  width: "30%";
+}
+
+.ratio {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  height: 0;
+  padding-bottom: 100%;
+  position: relative;
+  width: 100%;
+}
+.img-circle {
+  border-radius: 50%;
+}
+.img-responsive {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.title-panel {
+  font-size: medium;
+  font-weight: 800;
 }

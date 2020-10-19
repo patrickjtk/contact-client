@@ -47,7 +47,6 @@ class ContactScreen extends Component {
     const resp = await (this.state.contactId
       ? contact.putContact(this.state.contactId, fields)
       : contact.postContact(fields));
-    console.log(resp);
     if (!resp.ok) {
       this.setState({ loading: false, errorMsg: resp.data.error });
       return;
@@ -158,7 +157,7 @@ class ContactScreen extends Component {
                       className="btn btn-block btn-purple"
                       onClick={this.goBack}
                     >
-                      back
+                      Back
                     </button>
                   </div>
                 </fieldset>

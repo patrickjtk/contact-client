@@ -5,6 +5,8 @@ import contact from "../../api/contact";
 import "../../assets/css/Form.css";
 import ContactList from "../../components/ContactList";
 import { addContacts } from "../../redux/actions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 class ContactListScreen extends Component {
   constructor() {
@@ -17,9 +19,8 @@ class ContactListScreen extends Component {
 
   loadContacts = async () => {
     const resp = await contact.getContacts();
-    console.log(resp);
     if (!resp.ok) {
-      return "r";
+      return;
     }
     this.props.addContacts(resp.data.data);
   };
@@ -27,12 +28,14 @@ class ContactListScreen extends Component {
   render() {
     return (
       <div className="panel pb-3">
-        <div>
-          <Link to="/contactForm" className="btn btn-block btn-purple">
-            add
-          </Link>
-        </div>
         <div className="list">
+          <div className="row">
+            <div className="col-12 mb-4">
+              <Link to="/contactForm" className="btn btn-block btn-purple">
+                <FontAwesomeIcon icon={faPlus} /> Add
+              </Link>
+            </div>
+          </div>
           <ContactList />
         </div>
       </div>
